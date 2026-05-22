@@ -8,4 +8,4 @@ A minimal FastAPI application for learning Platform Engineering and SRE concepts
 
 ```bash
 git clone <your-repo-url>
-cd Ads-Platform-FastAPI-SQLite-
+cd Ads-Platform-FastAPI-SQLite
