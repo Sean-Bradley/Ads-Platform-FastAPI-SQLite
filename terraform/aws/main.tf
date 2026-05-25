@@ -76,39 +76,55 @@ resource "aws_route_table_association" "public_b" {
 }
 
 resource "aws_security_group" "web" {
-  name        = "ads-platform-web"
-  description = "Allow HTTP traffic"
-  vpc_id      = aws_vpc.main.id
+  name = "ads-platform-web"
+
+  vpc_id = aws_vpc.main.id
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
+    from_port = 8000
+    to_port   = 8000
+    protocol  = "tcp"
+
+    security_groups = [
+      aws_security_group.alb.id
+    ]
+  }
+
+  egress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "alb" {
+  name = "ads-platform-alb"
+
+  vpc_id = aws_vpc.main.id
+
+  ingress {
+    from_port = 80
+    to_port   = 80
+    protocol  = "tcp"
+
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+    from_port = 443
+    to_port   = 443
+    protocol  = "tcp"
 
-  ingress {
-    from_port   = 8000
-    to_port     = 8000
-    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
 
-  tags = {
-    Name = "ads-platform-web-sg"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }

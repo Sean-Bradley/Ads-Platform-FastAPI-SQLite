@@ -14,7 +14,7 @@ resource "aws_ecs_task_definition" "app" {
 
   # Prevent automatic deregistration of old revisions
   skip_destroy = true
-  
+
   lifecycle {
     create_before_destroy = true
   }
@@ -45,6 +45,14 @@ resource "aws_ecs_task_definition" "app" {
         {
           name  = "APP_PORT"
           value = "8000"
+        },
+        {
+          name  = "DATABASE_TYPE"
+          value = "postgresql"
+        },
+        {
+          name  = "DATABASE_URL"
+          value = "postgresql://postgres:ChangeThisPassword123!@${aws_db_instance.postgres.address}:5432/adsplatform"
         }
       ]
     }
