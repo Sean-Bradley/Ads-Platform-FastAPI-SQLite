@@ -2,6 +2,18 @@
 
 {% block content %}
 
+<h2>Debug Info</h2>
+<ul class="debug-info">
+    <li><strong>DATABASE_TYPE:</strong> {{ database_type }}</li>
+    {% if database_type == "sqlite" %}
+    <li><strong>DATABASE_PATH:</strong> {{ database_path }}</li>
+    {% else %}
+    <li><strong>DATABASE_HOST:</strong> {{ database_host }}</li>
+    <li><strong>DATABASE_PORT:</strong> {{ database_port }}</li>
+    <li><strong>DATABASE_NAME:</strong> {{ database_name }}</li>
+    {% endif %}
+</ul>
+
 <h2>Latest Ads</h2>
 
 {% if ads %}
