@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from .database import SessionLocal, engine, Base
-from . import crud
+from . import crud, config
 
 Base.metadata.create_all(bind=engine)
 
@@ -37,6 +37,11 @@ def home(request: Request, db: Session = Depends(get_db)):
         context={
             "request": request,
             "ads": ads,
+            "database_type": config.DATABASE_TYPE,
+            "database_host": config.DATABASE_HOST,
+            "database_port": config.DATABASE_PORT,
+            "database_name": config.DATABASE_NAME,
+            "database_path": config.DATABASE_PATH,
         },
     )
 
