@@ -18,5 +18,6 @@ DATABASE_PORT = os.getenv("DATABASE_PORT", "5432")
 DATABASE_NAME = os.getenv("DATABASE_NAME", "ads_platform")
 DATABASE_USER = os.getenv("DATABASE_USER", "ads_user")
 DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "ads_password")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-development-key")

@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from .database import SessionLocal, engine, Base
+from .database import SessionLocal, engine, Base, DATABASE_URL
 from . import crud, config
 
 Base.metadata.create_all(bind=engine)
@@ -37,11 +37,18 @@ def home(request: Request, db: Session = Depends(get_db)):
         context={
             "request": request,
             "ads": ads,
+            "app_env": config.APP_ENV,
+            "app_host": config.APP_HOST,
+            "app_port": config.APP_PORT,
+            "debug": config.DEBUG,
             "database_type": config.DATABASE_TYPE,
             "database_host": config.DATABASE_HOST,
             "database_port": config.DATABASE_PORT,
             "database_name": config.DATABASE_NAME,
+            "database_user": config.DATABASE_USER,
+            "database_password": config.DATABASE_PASSWORD,
             "database_path": config.DATABASE_PATH,
+            "database_url": DATABASE_URL,
         },
     )
 
