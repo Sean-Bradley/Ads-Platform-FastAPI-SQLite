@@ -4,14 +4,18 @@
 
 <h2>Debug Info</h2>
 <ul class="debug-info">
+    <li><strong>APP_ENV:</strong> {{ app_env }}</li>
+    <li><strong>APP_HOST:</strong> {{ app_host }}</li>
+    <li><strong>APP_PORT:</strong> {{ app_port }}</li>
+    <li><strong>DEBUG:</strong> {{ debug }}</li>
     <li><strong>DATABASE_TYPE:</strong> {{ database_type }}</li>
-    {% if database_type == "sqlite" %}
+    <li><strong>DATABASE_URL:</strong> {{ database_url }}</li>
     <li><strong>DATABASE_PATH:</strong> {{ database_path }}</li>
-    {% else %}
     <li><strong>DATABASE_HOST:</strong> {{ database_host }}</li>
     <li><strong>DATABASE_PORT:</strong> {{ database_port }}</li>
     <li><strong>DATABASE_NAME:</strong> {{ database_name }}</li>
-    {% endif %}
+    <li><strong>DATABASE_USER:</strong> {{ database_user }}</li>
+    <li><strong>DATABASE_PASSWORD:</strong> {{ database_password }}</li>
 </ul>
 
 <h2>Latest Ads</h2>

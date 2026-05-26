@@ -10,13 +10,17 @@ from app.config import (
     DATABASE_USER,
     DATABASE_PASSWORD,
     DATABASE_PATH,
+    DATABASE_URL as ENV_DATABASE_URL,
 )
 
 if DATABASE_TYPE == "postgresql":
-    DATABASE_URL = (
-        f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}"
-        f"@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
-    )
+    if ENV_DATABASE_URL:
+        DATABASE_URL = ENV_DATABASE_URL
+    else:
+        DATABASE_URL = (
+            f"postgresql://{DATABASE_USER}:{DATABASE_PASSWORD}"
+            f"@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
+        )
 
     engine = create_engine(DATABASE_URL)
 
