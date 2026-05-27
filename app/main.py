@@ -3,13 +3,15 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-
+from prometheus_fastapi_instrumentator import Instrumentator
 from .database import SessionLocal, engine, Base, DATABASE_URL
 from . import crud, config
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+Instrumentator().instrument(app).expose(app)
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
