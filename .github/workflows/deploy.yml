@@ -32,7 +32,9 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t $ECR_REPOSITORY:${{ github.sha }} .
+          docker build \
+            --build-arg APP_VERSION=${GITHUB_SHA::7} \
+            -t $ECR_REPOSITORY:${{ github.sha }} .
 
       - name: Tag Docker image
         run: |

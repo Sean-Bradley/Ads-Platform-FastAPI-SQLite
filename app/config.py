@@ -20,4 +20,4 @@ DATABASE_USER = os.getenv("DATABASE_USER", "ads_user")
 DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "ads_password")
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-development-key")
+APP_VERSION = os.getenv("APP_VERSION", "development")

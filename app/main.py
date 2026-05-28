@@ -9,6 +9,8 @@ from sqlalchemy.orm import Session
 from .database import SessionLocal, engine, Base, DATABASE_URL
 from . import crud, config
 
+from app.config import APP_VERSION
+
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 
 Base.metadata.create_all(bind=engine)
@@ -21,6 +23,8 @@ static_dir = Path(__file__).parent / "static"
 app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
+
+templates.env.globals["APP_VERSION"] = APP_VERSION
 
 # Dependency
 
@@ -44,6 +48,29 @@ def home(request: Request, db: Session = Depends(get_db)):
         context={
             "request": request,
             "ads": ads,
+            "app_env": config.APP_ENV,
+            "app_host": config.APP_HOST,
+            "app_port": config.APP_PORT,
+            "debug": config.DEBUG,
+            "database_type": config.DATABASE_TYPE,
+            "database_host": config.DATABASE_HOST,
+            "database_port": config.DATABASE_PORT,
+            "database_name": config.DATABASE_NAME,
+            "database_user": config.DATABASE_USER,
+            "database_password": config.DATABASE_PASSWORD,
+            "database_path": config.DATABASE_PATH,
+            "database_url": DATABASE_URL,
+        },
+    )
+
+
+@app.get("/about", response_class=HTMLResponse)
+def about(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="about.html",
+        context={
+            "request": request,
             "app_env": config.APP_ENV,
             "app_host": config.APP_HOST,
             "app_port": config.APP_PORT,
@@ -110,6 +137,16 @@ def edit_ad(
     db: Session = Depends(get_db),
 ):
     crud.update_ad(db, ad_id, title, description, price)
+
+    return RedirectResponse(url="/", status_code=303)
+
+
+@app.get("/delete/{ad_id}")
+def delete_ad(
+    ad_id: int,
+    db: Session = Depends(get_db),
+):
+    crud.delete_ad(db, ad_id)
 
     return RedirectResponse(url="/", status_code=303)
 
