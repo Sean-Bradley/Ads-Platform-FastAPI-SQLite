@@ -131,7 +131,7 @@ async def add_security_headers(request, call_next):
         "default-src 'self'; "
         "img-src 'self' data:; "
         "style-src 'self' 'unsafe-inline'; "
-        "script-src 'self' 'unsafe-inline'; "
+        "script-src 'self' 'unsafe-inline'"
     )
 
     return response
