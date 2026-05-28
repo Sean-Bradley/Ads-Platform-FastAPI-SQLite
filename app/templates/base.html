@@ -14,6 +14,7 @@
 
         <nav>
             <a href="/">Home</a>
+            <a href="/about">About</a>
             <a href="/create">Create Ad</a>
         </nav>
     </header>
@@ -21,6 +22,12 @@
     <main>
         {% block content %}{% endblock %}
     </main>
+
+    <footer>
+        <p>Ads Platform • Version {{ APP_VERSION }}</p>
+        <p><a href="https://sbcode.net">SBCODE Tutorials</a></p>
+        <p>Copyright © 2019-2026 Sean Bradley</p>
+    </footer>
 </body>
 
 </html>
