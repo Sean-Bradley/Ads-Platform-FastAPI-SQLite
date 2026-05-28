@@ -4,6 +4,7 @@ from fastapi import FastAPI, Request, Form, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.types import ASGIApp
 from sqlalchemy.orm import Session
 
 from .database import SessionLocal, engine, Base, DATABASE_URL
@@ -115,23 +116,32 @@ def edit_ad(
 
 
 @app.middleware("http")
-async def add_security_headers(request, call_next):
-    response = await call_next(request)
+async def add_security_headers(request: Request, call_next):
+    try:
+        response = await call_next(request)
+    except Exception as e:
+        # Log the error and re-raise
+        print(f"Error processing request: {e}")
+        raise
 
-    response.headers["X-Frame-Options"] = "DENY"
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-    response.headers["Permissions-Policy"] = "geolocation=()"
+    try:
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "geolocation=()"
 
-    response.headers["Strict-Transport-Security"] = (
-        "max-age=31536000; includeSubDomains; preload"
-    )
+        response.headers["Strict-Transport-Security"] = (
+            "max-age=31536000; includeSubDomains; preload"
+        )
 
-    response.headers["Content-Security-Policy"] = (
-        "default-src 'self'; "
-        "img-src 'self' data:; "
-        "style-src 'self' 'unsafe-inline'; "
-        "script-src 'self' 'unsafe-inline'; "
-    )
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'self'; "
+            "img-src 'self' data:; "
+            "style-src 'self' 'unsafe-inline'; "
+            "script-src 'self' 'unsafe-inline'; "
+        )
+    except Exception as e:
+        print(f"Error setting headers: {e}")
+        raise
 
     return response
