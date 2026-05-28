@@ -1,21 +1,27 @@
+from pathlib import Path
+
 from fastapi import FastAPI, Request, Form, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from prometheus_fastapi_instrumentator import Instrumentator
+
 from .database import SessionLocal, engine, Base, DATABASE_URL
 from . import crud, config
+
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-Instrumentator().instrument(app).expose(app)
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])
 
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-templates = Jinja2Templates(directory="app/templates")
+static_dir = Path(__file__).parent / "static"
+app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+
+templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 
 # Dependency
 
@@ -53,6 +59,7 @@ def home(request: Request, db: Session = Depends(get_db)):
             "database_url": DATABASE_URL,
         },
     )
+
 
 @app.get("/create", response_class=HTMLResponse)
 def create_page(request: Request):
@@ -106,3 +113,15 @@ def edit_ad(
     crud.update_ad(db, ad_id, title, description, price)
 
     return RedirectResponse(url="/", status_code=303)
+
+
+@app.middleware("http")
+async def add_security_headers(request, call_next):
+    response = await call_next(request)
+
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "geolocation=()"
+
+    return response
