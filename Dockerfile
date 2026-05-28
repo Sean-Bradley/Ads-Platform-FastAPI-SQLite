@@ -8,6 +8,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+ARG APP_VERSION=development
 ENV APP_VERSION=$APP_VERSION
 
 EXPOSE 8000
